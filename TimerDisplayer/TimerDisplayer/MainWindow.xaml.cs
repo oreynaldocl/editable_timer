@@ -43,7 +43,7 @@ namespace TimerDisplayer
 
             TimerManager manager = new TimerManager(_logText);
             SimpleExecuter executer1 = new SimpleExecuter(_logText);
-            manager.RegisterTimer(executer1, TimeSpan.FromSeconds(5));
+            manager.RegisterTimer(executer1, TimeSpan.FromSeconds(3));
         }
 
         private void Add_Timer(object sender, RoutedEventArgs e)
