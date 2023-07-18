@@ -23,9 +23,9 @@
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="0" Grid.Row="1">
-            <Label Width="100" Margin="3" VerticalAlignment="Center">Timer Id</Label>
-            <Label Width="85" Margin="3" VerticalAlignment="Center">Set New Time</Label>
-            <Label Width="100" Margin="3" VerticalAlignment="Center">Current Interval</Label>
+            <Label Width="110" Margin="3" VerticalAlignment="Center">Timer Id</Label>
+            <Label Width="150" Margin="3" VerticalAlignment="Center">Set New Time</Label>
+            <Label Width="200" Margin="3" VerticalAlignment="Center">Current Interval</Label>
         </StackPanel>
         <StackPanel  Name="timerPanel" Grid.Column="0" Grid.Row="3" Orientation="Vertical">
             
