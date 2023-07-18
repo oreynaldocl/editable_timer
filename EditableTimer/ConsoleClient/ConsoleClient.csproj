@@ -53,7 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EditableTimer\EditableTimer.csproj">
-      <Project>{e35dce34-d3b5-4983-80e7-25947b9dcf07}</Project>
+      <Project>{e02c5537-6123-4162-9c17-ee3f2c8f8491}</Project>
       <Name>EditableTimer</Name>
     </ProjectReference>
   </ItemGroup>

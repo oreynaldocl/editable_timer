@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditableTimer", "EditableTimer\EditableTimer.csproj", "{E35DCE34-D3B5-4983-80E7-25947B9DCF07}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CECC4A8C-C1B0-40C1-8066-0DC4B0183925}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
@@ -15,20 +13,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleClient", "ConsoleClient\ConsoleClient.csproj", "{7158739B-84FF-4319-A764-4A572E590CB4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditableTimer", "EditableTimer\EditableTimer.csproj", "{E02C5537-6123-4162-9C17-EE3F2C8F8491}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E35DCE34-D3B5-4983-80E7-25947B9DCF07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E35DCE34-D3B5-4983-80E7-25947B9DCF07}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E35DCE34-D3B5-4983-80E7-25947B9DCF07}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E35DCE34-D3B5-4983-80E7-25947B9DCF07}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7158739B-84FF-4319-A764-4A572E590CB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7158739B-84FF-4319-A764-4A572E590CB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7158739B-84FF-4319-A764-4A572E590CB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7158739B-84FF-4319-A764-4A572E590CB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E02C5537-6123-4162-9C17-EE3F2C8F8491}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E02C5537-6123-4162-9C17-EE3F2C8F8491}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E02C5537-6123-4162-9C17-EE3F2C8F8491}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E02C5537-6123-4162-9C17-EE3F2C8F8491}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
