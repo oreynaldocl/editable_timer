@@ -42,7 +42,7 @@ namespace TimerDisplayer
             timers = new List<object>();
 
             TimerManager manager = new TimerManager(_logText);
-            SimpleExecuter executer1 = new SimpleExecuter(_logText);
+            SimpleExecuter executer1 = new SimpleExecuter(0, _logText);
             manager.RegisterTimer(executer1, TimeSpan.FromSeconds(3));
         }
 

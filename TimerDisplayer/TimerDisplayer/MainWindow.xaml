@@ -37,13 +37,13 @@
                 ScrollViewer.CanContentScroll="True"
                 Width="Auto"
                 Margin="0 0 16 0"
-                MaxHeight="420"
-                Height="420"
+                MaxHeight="415"
+                Height="415"
                 Background="Beige"
             >
                 <TextBlock
                     Name="logBlock"
-                    TextWrapping="WrapWithOverflow"
+                    TextWrapping="Wrap"
                     TextAlignment="Left"
                     Text="{Binding Path=LogText.CompleteLog, Mode=TwoWay}"
                 />
