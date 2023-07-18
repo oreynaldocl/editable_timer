@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EditableTimer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TimerDisplayer.Executers;
 
 namespace TimerDisplayer
 {
@@ -23,6 +25,7 @@ namespace TimerDisplayer
 
         Thickness defaultThickness = new Thickness();
         List<object> timers;
+        Logger log;
 
 
         public MainWindow()
@@ -34,6 +37,12 @@ namespace TimerDisplayer
             defaultThickness.Top = 3;
 
             timers = new List<object>();
+            logBlock.Text = "Here LOGS:";
+            log = new Logger(logBlock);
+            TimerManager manager = new TimerManager(log);
+            SimpleExecuter executer1 = new SimpleExecuter(log);
+            manager.RegisterTimer(executer1, TimeSpan.FromSeconds(5));
+
         }
 
         private void Add_Timer(object sender, RoutedEventArgs e)

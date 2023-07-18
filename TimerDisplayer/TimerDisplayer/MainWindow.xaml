@@ -9,6 +9,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="500"/>
+            <ColumnDefinition Width="300"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="100" />
@@ -28,6 +29,18 @@
         </StackPanel>
         <StackPanel  Name="timerPanel" Grid.Column="0" Grid.Row="3" Orientation="Vertical">
             
+        </StackPanel>
+        <StackPanel  Name="logPanel" Grid.Column="1" Grid.Row="3" Orientation="Vertical">
+            <ScrollViewer>
+                <TextBlock
+                    Name="logBlock"
+                    TextWrapping="WrapWithOverflow"
+                    TextAlignment="Left"
+                    ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    Height="300"
+                />
+            </ScrollViewer>
         </StackPanel>
     </Grid>
 </Window>
