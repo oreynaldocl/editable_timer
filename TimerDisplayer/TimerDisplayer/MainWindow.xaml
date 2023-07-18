@@ -1,0 +1,33 @@
+﻿<Window x:Class="TimerDisplayer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TimerDisplayer"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="500"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="30" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" DockPanel.Dock="Top" Grid.Column="0" Grid.Row="0">
+            <Label Width="100" Margin="3" VerticalAlignment="Center">Add New Timer</Label>
+            <Button Width="50" Margin="3" VerticalAlignment="Center" Content="New" Click="Add_Timer"/>
+            <TextBox Width="100" Margin="3" VerticalAlignment="Center" Name="TimeIntervalTextBox">Time Interval</TextBox>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="0" Grid.Row="1">
+            <Label Width="100" Margin="3" VerticalAlignment="Center">Timer Id</Label>
+            <Label Width="85" Margin="3" VerticalAlignment="Center">Set New Time</Label>
+            <Label Width="100" Margin="3" VerticalAlignment="Center">Current Interval</Label>
+        </StackPanel>
+        <StackPanel  Name="timerPanel" Grid.Column="0" Grid.Row="3" Orientation="Vertical">
+            
+        </StackPanel>
+    </Grid>
+</Window>
