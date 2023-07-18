@@ -7,6 +7,7 @@ namespace ConsoleClient
     public class SimpleExecuter : ITimerExecuter
     {
         private readonly ITimerManager _manager;
+        private readonly Random _random;
 
         private int identifier;
         public int Identifier => identifier;
@@ -17,13 +18,14 @@ namespace ConsoleClient
         {
             this.identifier = identifier;
             _manager = manager;
+            _random = new Random();
 
             _manager.RegisterTimer(this, TimeSpan.FromSeconds(10));
         }
 
         public Task<TimeSpan> CalculateNextTime()
         {
-            return Task.FromResult(TimeSpan.FromSeconds(10));
+            return Task.FromResult(TimeSpan.FromSeconds(_random.Next(5, 15)));
         }
 
         public Task ExecuteHandler()

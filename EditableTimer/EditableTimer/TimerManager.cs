@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EditableTimer.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,8 +20,10 @@ namespace EditableTimer
         {
             if (timers.ContainsKey(executer.Identifier))
                 throw new InvalidOperationException($"Not possible to register again the executer with identifier: {executer.Identifier}");
+            dueInitialTime.CheckPositive();
             timers.Add(executer.Identifier, new TimerItem() { Executer = executer });
 
+            _logger.Log($"[{executer.Identifier}] RegisterTimer {dueInitialTime}s");
             StartTimer(executer, DateTime.UtcNow.Add(dueInitialTime));
         }
 
@@ -55,8 +58,12 @@ namespace EditableTimer
                 {
                     await executer.ExecuteHandler();
                     TimeSpan timeSpan = await executer.CalculateNextTime();
+                    _logger.Log($"[{executer.Identifier}] Next executing in {timeSpan}s");
                     // Method will create new thread
                     StartTimer(executer, DateTime.UtcNow.Add(timeSpan));
+                }
+                else {
+                    _logger.Log($"[{executer.Identifier}] cancelled.");
                 }
             }
             catch (Exception ex)
@@ -84,7 +91,13 @@ namespace EditableTimer
 
         public void ChangeWaitTime(ITimerExecuter executer, TimeSpan newTime)
         {
-            throw new NotImplementedException();
+            if (!timers.ContainsKey(executer.Identifier))
+                throw new Exception($"Not found executer with identifier: {executer.Identifier}");
+            newTime.CheckPositive();
+
+            timers[executer.Identifier].Source.Cancel();
+            StartTimer(executer, DateTime.UtcNow.Add(newTime));
+            _logger.Log($"[{executer.Identifier}] ChangeWaitTime {newTime}s");
         }
 
     }
