@@ -10,7 +10,6 @@ namespace EditableTimer.Extensions
             {
                 string message = errorMessage != null ? errorMessage : $"Not possible to manage negative periods: {current.TotalMilliseconds}ms";
                 throw new Exception(message);
-
             }
         }
 

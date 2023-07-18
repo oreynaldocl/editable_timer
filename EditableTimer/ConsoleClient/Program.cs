@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using EditableTimer;
 
@@ -11,17 +13,21 @@ namespace ConsoleClient
             Logger log = new Logger();
             TimerManager manager = new TimerManager(log);
 
-            Console.WriteLine($"{DateTime.UtcNow.ToString("HH:mm:ss.ffff")} Creating an executer");
+            Console.WriteLine($"{DateTime.UtcNow.ToString("HH:mm:ss.ffff")} T#{Thread.CurrentThread.ManagedThreadId} Creating an executer");
             // CREATION EXECUTER
-            SimpleExecuter simple = new SimpleExecuter(1, manager);
+            SimpleExecuter simple1 = new SimpleExecuter(1, manager);
+            List<SimpleExecuter> list = new List<SimpleExecuter>();
+            for (int i = 0; i < 15; i++) {
+                list.Add(new SimpleExecuter(i + 2, manager));
+            }
 
-            await Task.Delay(1000);
-            Console.WriteLine($"{DateTime.UtcNow.ToString("HH:mm:ss.ffff")} Updating to wait 2 secs");
-            manager.ChangeWaitTime(simple, TimeSpan.FromSeconds(2));
+            Thread.Sleep(1000);
+            Console.WriteLine($"{DateTime.UtcNow.ToString("HH:mm:ss.ffff")} T#{Thread.CurrentThread.ManagedThreadId} Updating to wait 2 secs");
+            manager.ChangeWaitTime(simple1, TimeSpan.FromSeconds(2));
 
-            await Task.Delay(4000);
-            Console.WriteLine($"{DateTime.UtcNow.ToString("HH:mm:ss.ffff")} Updating to wait 15 secs");
-            manager.ChangeWaitTime(simple, TimeSpan.FromSeconds(15));
+            await Task.Delay(35000);
+            Console.WriteLine($"{DateTime.UtcNow.ToString("HH:mm:ss.ffff")} T#{Thread.CurrentThread.ManagedThreadId} Unregister an executor");
+            manager.UnregisterTimer(simple1);
 
             Console.ReadKey();
         }

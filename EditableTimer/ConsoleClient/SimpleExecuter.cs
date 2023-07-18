@@ -1,5 +1,6 @@
 ﻿using EditableTimer;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ConsoleClient
@@ -28,10 +29,10 @@ namespace ConsoleClient
             return Task.FromResult(TimeSpan.FromSeconds(_random.Next(5, 15)));
         }
 
-        public Task ExecuteHandler()
+        public async Task ExecuteHandler()
         {
-            Console.WriteLine($"{DateTime.UtcNow.ToString("HH:mm:ss.ffff")} Just execute a simple log");
-            return Task.CompletedTask;
+            await Task.Delay(500);
+            Console.WriteLine($"{DateTime.UtcNow.ToString("HH:mm:ss.ffff")} [{identifier}-T#{Thread.CurrentThread.ManagedThreadId}] EXECUTING Just execute a simple log ###");
         }
 
         public Task FailureHandler()

@@ -8,8 +8,15 @@ namespace EditableTimer
 {
     public class TimerManager : ITimerManager
     {
-        internal Dictionary<int, TimerItem> timers = new Dictionary<int, TimerItem>();
+        internal Dictionary<int, TimerItem> _timers = new Dictionary<int, TimerItem>();
         private readonly ILogger _logger;
+        private IDateTimeWrapper _dateWrapper;
+
+        public IDateTimeWrapper DateWrapper
+        {
+            get { return _dateWrapper ?? new DateTimeWrapper(); }
+            set { _dateWrapper = value; }
+        }
 
         public TimerManager(ILogger logger)
         {
@@ -18,25 +25,35 @@ namespace EditableTimer
 
         public void RegisterTimer(ITimerExecuter executer, TimeSpan dueInitialTime)
         {
-            if (timers.ContainsKey(executer.Identifier))
+            if (_timers.ContainsKey(executer.Identifier))
                 throw new InvalidOperationException($"Not possible to register again the executer with identifier: {executer.Identifier}");
             dueInitialTime.CheckPositive();
-            timers.Add(executer.Identifier, new TimerItem() { Executer = executer });
+            _timers.Add(executer.Identifier, new TimerItem() { Executer = executer });
 
-            _logger.Log($"[{executer.Identifier}] RegisterTimer {dueInitialTime}s");
-            StartTimer(executer, DateTime.UtcNow.Add(dueInitialTime));
+            _logger.Log($"{BuildId(executer.Identifier)} RegisterTimer {dueInitialTime}s");
+            StartTimer(executer, DateWrapper.UtcNow.Add(dueInitialTime));
+        }
+
+        internal string BuildId(int identifier)
+        {
+            return $"[{identifier}-T#{Thread.CurrentThread.ManagedThreadId}]";
         }
 
         public void UnregisterTimer(ITimerExecuter executer)
         {
-            throw new NotImplementedException();
+            if (!_timers.ContainsKey(executer.Identifier))
+                throw new Exception($"Not found executer with identifier: {executer.Identifier}");
+            _timers[executer.Identifier].Source.Cancel();
+
+            _logger.Log($"{BuildId(executer.Identifier)} UnregisterTime########################");
+            _timers.Remove(executer.Identifier);
         }
 
         internal void StartTimer(ITimerExecuter executer, DateTime waitUntil)
         {
             UpsertCancellationSource(executer, waitUntil);
 
-            Task.Factory.StartNew(WaitAndExecute, timers[executer.Identifier]);
+            Task.Factory.StartNew(WaitAndExecute, _timers[executer.Identifier]);
         }
 
         internal async Task WaitAndExecute(object param)
@@ -48,7 +65,7 @@ namespace EditableTimer
             try
             {
                 while (
-                    DateTime.UtcNow <= waitUntil
+                    DateWrapper.UtcNow <= waitUntil
                     && !token.IsCancellationRequested
                 )
                 {
@@ -58,32 +75,28 @@ namespace EditableTimer
                 {
                     await executer.ExecuteHandler();
                     TimeSpan timeSpan = await executer.CalculateNextTime();
-                    _logger.Log($"[{executer.Identifier}] Next executing in {timeSpan}s");
+                    _logger.Log($"{BuildId(executer.Identifier)} Next executing in {timeSpan}s");
                     // Method will create new thread
-                    StartTimer(executer, DateTime.UtcNow.Add(timeSpan));
+                    StartTimer(executer, DateWrapper.UtcNow.Add(timeSpan));
                 }
-                else {
-                    _logger.Log($"[{executer.Identifier}] cancelled.");
+                else
+                {
+                    _logger.Log($"{BuildId(executer.Identifier)} cancelled.");
                 }
             }
             catch (Exception ex)
             {
                 _logger.Log(ex.Message);
                 await executer.FailureHandler();
-
-                // TODO Probably we don't need to start a timer, probably it will loop forever. I think user can use ChangeWaitTime internally to start again
-                TimeSpan timeSpan = await executer.CalculateNextTime();
-                // Method will create new thread
-                StartTimer(executer, DateTime.UtcNow.Add(timeSpan));
             }
         }
 
         internal void UpsertCancellationSource(ITimerExecuter executer, DateTime waitUntil)
         {
-            timers[executer.Identifier] = new TimerItem()
+            _timers[executer.Identifier] = new TimerItem()
             {
                 // Be sure to have just a new Source, executer will be the same
-                Executer = timers[executer.Identifier].Executer,
+                Executer = _timers[executer.Identifier].Executer,
                 Source = new CancellationTokenSource(),
                 WaitUntil = waitUntil,
             };
@@ -91,13 +104,13 @@ namespace EditableTimer
 
         public void ChangeWaitTime(ITimerExecuter executer, TimeSpan newTime)
         {
-            if (!timers.ContainsKey(executer.Identifier))
+            if (!_timers.ContainsKey(executer.Identifier))
                 throw new Exception($"Not found executer with identifier: {executer.Identifier}");
             newTime.CheckPositive();
 
-            timers[executer.Identifier].Source.Cancel();
-            StartTimer(executer, DateTime.UtcNow.Add(newTime));
-            _logger.Log($"[{executer.Identifier}] ChangeWaitTime {newTime}s");
+            _timers[executer.Identifier].Source.Cancel();
+            StartTimer(executer, DateWrapper.UtcNow.Add(newTime));
+            _logger.Log($"{BuildId(executer.Identifier)} ChangeWaitTime {newTime}s");
         }
 
     }
