@@ -39,6 +39,7 @@
                     ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     Height="300"
+                    Text="{Binding Path=LogText.CompleteLog, Mode=TwoWay}"
                 />
             </ScrollViewer>
         </StackPanel>

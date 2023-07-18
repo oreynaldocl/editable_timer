@@ -25,11 +25,14 @@ namespace TimerDisplayer
 
         Thickness defaultThickness = new Thickness();
         List<object> timers;
-        Logger log;
+
+        private LoggerText _logText = new LoggerText();
+        public LoggerText LogText => _logText;
 
 
         public MainWindow()
         {
+            DataContext = this;
             InitializeComponent();
             defaultThickness.Bottom = 3;
             defaultThickness.Left = 3;
@@ -37,12 +40,10 @@ namespace TimerDisplayer
             defaultThickness.Top = 3;
 
             timers = new List<object>();
-            logBlock.Text = "Here LOGS:";
-            log = new Logger(logBlock);
-            TimerManager manager = new TimerManager(log);
-            SimpleExecuter executer1 = new SimpleExecuter(log);
-            manager.RegisterTimer(executer1, TimeSpan.FromSeconds(5));
 
+            TimerManager manager = new TimerManager(_logText);
+            SimpleExecuter executer1 = new SimpleExecuter(_logText);
+            manager.RegisterTimer(executer1, TimeSpan.FromSeconds(5));
         }
 
         private void Add_Timer(object sender, RoutedEventArgs e)
