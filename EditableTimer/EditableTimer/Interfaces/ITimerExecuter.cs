@@ -22,7 +22,7 @@ namespace EditableTimer
         /// After the current wait time, this method is executed
         /// </summary>
         /// <returns></returns>
-        Task ExecuteHanlder();
+        Task ExecuteHandler();
         // TODO Review if we need to call CalculateNextTime after FailureHandler
         /// <summary>
         /// If there is any failure in process this is executed
