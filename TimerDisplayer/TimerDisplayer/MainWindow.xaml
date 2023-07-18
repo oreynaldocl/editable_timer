@@ -20,6 +20,8 @@
             <Label Width="100" Margin="3" VerticalAlignment="Center">Add New Timer</Label>
             <Button Width="50" Margin="3" VerticalAlignment="Center" Content="New" Click="Add_Timer"/>
             <TextBox Width="100" Margin="3" VerticalAlignment="Center" Name="TimeIntervalTextBox">Time Interval</TextBox>
+            <Label Width="75" Margin="0" Padding="0" VerticalAlignment="Center">Current Time</Label>
+            <Label Width="25" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Left" Name="CurrentTimeLabel">0</Label>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="0" Grid.Row="1">

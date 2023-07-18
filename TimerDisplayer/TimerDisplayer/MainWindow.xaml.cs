@@ -44,6 +44,12 @@ namespace TimerDisplayer
             TimerManager manager = new TimerManager(_logText);
             SimpleExecuter executer1 = new SimpleExecuter(_logText);
             manager.RegisterTimer(executer1, TimeSpan.FromSeconds(5));
+            ClockUpdateExecuter clockUpdater = new ClockUpdateExecuter(_logText, Dispatcher, CurrentTimeLabel);
+            manager.RegisterTimer(clockUpdater, TimeSpan.FromSeconds(1));
+
+            
+
+
         }
 
         private void Add_Timer(object sender, RoutedEventArgs e)
