@@ -11,19 +11,19 @@ namespace TimerDisplayer.Executers
         private int identifier = -1;
         private readonly ILogger _logger;
         private readonly Dispatcher _dispatcher;
-        private readonly Label _label;
-        private int interval = 15;
+        public readonly StackPanel panel;
+        public int interval { get; set; } = 15;
         private Boolean isTriggered = false;
 
         public int Identifier => identifier;
 
         public TimeSpan DefaultPeriod => TimeSpan.FromSeconds(60);
 
-        public WorkerExecuter(ILogger logger, Dispatcher dispatcher, Label label, int identifier, int interval)
+        public WorkerExecuter(ILogger logger, Dispatcher dispatcher, StackPanel panel, int identifier, int interval)
         {
             _logger = logger;
             _dispatcher = dispatcher;
-            _label = label;
+            this.panel = panel;
             this.identifier = identifier;
             this.interval = interval;
         }
@@ -43,18 +43,23 @@ namespace TimerDisplayer.Executers
                 if (isTriggered == false)
                 {
                     isTriggered = true;
-                    _label.Content = "triggered";
+                    ((Label)panel.Children[5]).Content = "triggered";
                 }
                 else
                 {
                     isTriggered = false;
-                    _label.Content = "";
+                    ((Label)panel.Children[5]).Content = "";
                 }
             });
             return Task.CompletedTask;
         }
 
         public Task FailureHandler()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
         {
             throw new NotImplementedException();
         }

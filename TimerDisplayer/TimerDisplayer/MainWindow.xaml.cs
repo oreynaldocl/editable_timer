@@ -15,7 +15,7 @@ namespace TimerDisplayer
     {
         
         private Thickness defaultThickness = new Thickness();
-        private List<object> timers;
+        private Dictionary<int, WorkerExecuter> timers;
         private readonly TimerManager _manager;
 
         private LoggerText _logText = new LoggerText();
@@ -31,12 +31,12 @@ namespace TimerDisplayer
             defaultThickness.Right = 3;
             defaultThickness.Top = 3;
 
-            timers = new List<object>();
+            timers = new Dictionary<int, WorkerExecuter>();
 
             _manager = new TimerManager(_logText);
             executer1 = new SimpleExecuter(0, _logText, _manager);
-            ClockUpdateExecuter clockUpdater = new ClockUpdateExecuter(_logText, Dispatcher, CurrentTimeLabel);
-            _manager.RegisterTimer(clockUpdater, TimeSpan.FromSeconds(5));
+            //ClockUpdateExecuter clockUpdater = new ClockUpdateExecuter(_logText, Dispatcher, CurrentTimeLabel);
+            //_manager.RegisterTimer(clockUpdater, TimeSpan.FromSeconds(5));
         }
 
         private void Add_Timer(object sender, RoutedEventArgs e)
@@ -48,10 +48,34 @@ namespace TimerDisplayer
             }
             StackPanel newPanel = makeTimerPanel(timers.Count, interval);
             Label triggeredLabel = (Label)newPanel.Children[5];
-            //WorkerExecuter worker = new WorkerExecuter(_logText, Dispatcher, triggeredLabel, timers.Count + 1000, interval);
-            //_manager.RegisterTimer(worker, TimeSpan.FromSeconds(interval));
-            timers.Add(timers.Count);
+            WorkerExecuter worker = new WorkerExecuter(_logText, Dispatcher, newPanel, timers.Count + 1000, interval);
+            _manager.RegisterTimer(worker, TimeSpan.FromSeconds(interval));
+            timers.Add(timers.Count, worker);
             timerPanel.Children.Add(newPanel);
+        }
+
+        private void Delete_Timer(object sender, RoutedEventArgs e)
+        {
+            Button b = (Button)sender;
+            StackPanel parent = (StackPanel)(b.Parent);
+            int id = Int32.Parse(((Label)parent.Children[0]).Content.ToString());
+            WorkerExecuter worker = timers[id];
+            timerPanel.Children.Remove(worker.panel);
+            _manager.UnregisterTimer(worker);
+            timers.Remove(id);
+
+        }
+
+        private void Reset_Timer(object sender, RoutedEventArgs e)
+        {
+            Button b = (Button)sender;
+            StackPanel parent = (StackPanel)(b.Parent);
+            int id = Int32.Parse(((Label)parent.Children[0]).Content.ToString());
+            WorkerExecuter worker = timers[id];
+            int newInterval = Int32.Parse(((TextBox)worker.panel.Children[2]).Text);
+            ((Label)worker.panel.Children[4]).Content = newInterval;
+            worker.interval = newInterval;
+            _manager.ChangeWaitTime(worker, TimeSpan.FromSeconds(newInterval));
         }
 
         private StackPanel makeTimerPanel(int count, int timeInterval)
@@ -74,6 +98,7 @@ namespace TimerDisplayer
             deleteButton.VerticalAlignment = VerticalAlignment.Center;
             deleteButton.Margin = defaultThickness;
             deleteButton.Content = "X";
+            deleteButton.Click += Delete_Timer;
             deleteButton.Name = "DeleteButton";
 
             TextBox tBox = new TextBox();
@@ -87,6 +112,7 @@ namespace TimerDisplayer
             resetButton.VerticalAlignment = VerticalAlignment.Center;
             resetButton.Margin = defaultThickness;
             resetButton.Content = "Set";
+            resetButton.Click += Reset_Timer;
             resetButton.Name = "SetButton";
 
             Label intervalLabel = new Label();
