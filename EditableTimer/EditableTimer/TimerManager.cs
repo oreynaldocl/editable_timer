@@ -1,4 +1,5 @@
 ﻿using EditableTimer.Extensions;
+using EditableTimer.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -10,21 +11,29 @@ namespace EditableTimer
     {
         internal Dictionary<int, TimerItem> _timers = new Dictionary<int, TimerItem>();
         private readonly ILogger _logger;
-        private IDateTimeWrapper _dateWrapper;
 
-        public IDateTimeWrapper DateWrapper
+        private IDateTimeWrapper _dateWrapper;
+        internal IDateTimeWrapper DateWrapper
         {
             get { return _dateWrapper ?? new DateTimeWrapper(); }
             set { _dateWrapper = value; }
         }
 
+        private ITaskFactory _taskFactory;
+        internal ITaskFactory TaskFactory
+        {
+            get { return _taskFactory ?? new TaskFactoryWrapper(); }
+            set { _taskFactory = value; }
+        }
+
         public TimerManager(ILogger logger)
         {
-            _logger = logger;
+            _logger = logger ?? new DefaultLogger();
         }
 
         public void RegisterTimer(ITimerExecuter executer, TimeSpan dueInitialTime)
         {
+            executer.CheckNull<ArgumentException>("Executer should be defined");
             if (_timers.ContainsKey(executer.Identifier))
                 throw new InvalidOperationException($"Not possible to register again the executer with identifier: {executer.Identifier}");
             dueInitialTime.CheckPositive();
@@ -41,19 +50,20 @@ namespace EditableTimer
 
         public void UnregisterTimer(ITimerExecuter executer)
         {
+            executer.CheckNull<ArgumentException>("Executer should be defined");
             if (!_timers.ContainsKey(executer.Identifier))
                 throw new Exception($"Not found executer with identifier: {executer.Identifier}");
             _timers[executer.Identifier].Source.Cancel();
 
-            _logger.Log($"{BuildId(executer.Identifier)} UnregisterTime");
+            _logger.Log($"{BuildId(executer.Identifier)} UnregisterTimer");
             _timers.Remove(executer.Identifier);
         }
 
         internal void StartTimer(ITimerExecuter executer, DateTime waitUntil)
         {
-            UpsertCancellationSource(executer, waitUntil);
+            UpdateWaitAndCancellation(executer, waitUntil);
 
-            Task.Factory.StartNew(WaitAndExecute, _timers[executer.Identifier]);
+            TaskFactory.StartNew(WaitAndExecute, _timers[executer.Identifier]);
         }
 
         internal async Task WaitAndExecute(object param)
@@ -91,7 +101,7 @@ namespace EditableTimer
             }
         }
 
-        internal void UpsertCancellationSource(ITimerExecuter executer, DateTime waitUntil)
+        internal void UpdateWaitAndCancellation(ITimerExecuter executer, DateTime waitUntil)
         {
             _timers[executer.Identifier] = new TimerItem()
             {

@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace EditableTimer
 {
-    public class TimerItem
+    internal class TimerItem
     {
         public ITimerExecuter Executer { get; set; }
         public CancellationTokenSource Source { get; set; }
