@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using TimerDisplayer.Executers;
 
 namespace TimerDisplayer
@@ -19,7 +20,7 @@ namespace TimerDisplayer
 
         private LoggerText _logText = new LoggerText();
         public LoggerText LogText => _logText;
-        TimerManager manager;
+        SimpleExecuter executer1;
 
         public MainWindow()
         {
@@ -32,12 +33,10 @@ namespace TimerDisplayer
 
             timers = new List<object>();
 
-            TimerManager manager = new TimerManager(_logText);
-            _manager = manager;
-            SimpleExecuter executer1 = new SimpleExecuter(0, _logText);
-            _manager.RegisterTimer(executer1, TimeSpan.FromSeconds(20));
+            _manager = new TimerManager(_logText);
+            executer1 = new SimpleExecuter(0, _logText, _manager);
             ClockUpdateExecuter clockUpdater = new ClockUpdateExecuter(_logText, Dispatcher, CurrentTimeLabel);
-            _manager.RegisterTimer(clockUpdater, TimeSpan.FromSeconds(1));
+            _manager.RegisterTimer(clockUpdater, TimeSpan.FromSeconds(5));
         }
 
         private void Add_Timer(object sender, RoutedEventArgs e)
@@ -49,8 +48,8 @@ namespace TimerDisplayer
             }
             StackPanel newPanel = makeTimerPanel(timers.Count, interval);
             Label triggeredLabel = (Label)newPanel.Children[5];
-            WorkerExecuter worker = new WorkerExecuter(_logText, Dispatcher, triggeredLabel, timers.Count+1000, interval);
-            _manager.RegisterTimer(worker, TimeSpan.FromSeconds(interval));
+            //WorkerExecuter worker = new WorkerExecuter(_logText, Dispatcher, triggeredLabel, timers.Count + 1000, interval);
+            //_manager.RegisterTimer(worker, TimeSpan.FromSeconds(interval));
             timers.Add(timers.Count);
             timerPanel.Children.Add(newPanel);
         }
