@@ -8,16 +8,12 @@ namespace EditableTimer
     /// Every new update of timer needs to create a new Thread.
     /// It is expected that only one thread at time is related with TimerExecuter
     /// </summary>
-    public interface ITimerExecuter
+    public interface ITimerExecuter: IDisposable
     {
         /// <summary>
         /// Unique identifer that will be used for TimerManager
         /// </summary>
         int Identifier { get; }
-        /// <summary>
-        /// Used for calculate next execution if there is any error
-        /// </summary>
-        TimeSpan DefaultPeriod { get; }
         /// <summary>
         /// After the current wait time, this method is executed
         /// </summary>

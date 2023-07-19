@@ -85,7 +85,7 @@ namespace EditableTimer
                 {
                     await executer.ExecuteHandler();
                     TimeSpan timeSpan = await executer.CalculateNextTime();
-                    _logger.Log($"{BuildId(executer.Identifier)} Next execution in {timeSpan.TotalSeconds}s");
+                    _logger.Log($"{BuildId(executer.Identifier)} next execution in {timeSpan.TotalSeconds}s");
                     // Method will create new thread
                     StartTimer(executer, DateWrapper.UtcNow.Add(timeSpan));
                 }
@@ -96,7 +96,7 @@ namespace EditableTimer
             }
             catch (Exception ex)
             {
-                _logger.Log(ex.Message);
+                _logger.LogError($"{BuildId(executer.Identifier)} error while executing", ex);
                 await executer.FailureHandler();
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EditableTimer
 {
@@ -6,6 +7,9 @@ namespace EditableTimer
     internal class DefaultLogger : ILogger
     {
         public void Log(string message)
+        { }
+
+        public void LogError(string message, Exception ex)
         { }
     }
 }

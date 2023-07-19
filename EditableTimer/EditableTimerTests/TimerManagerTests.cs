@@ -224,7 +224,6 @@ namespace EditableTimer.Tests
 
             manager.ChangeWaitTime(_fakeExecuter.Object, TimeSpan.FromSeconds(10));
 
-            //manager._timers
             Assert.AreEqual(1, manager._timers.Count);
             TimerItem item = manager._timers[0];
             Assert.AreEqual(_fakeExecuter.Object, item.Executer);
@@ -234,5 +233,95 @@ namespace EditableTimer.Tests
             _mockRepo.VerifyAll();
         }
 
+        [TestMethod]
+        public async Task WaitAndExecute_Canceled_JustLog()
+        {
+            CancellationTokenSource source = new CancellationTokenSource();
+            TimerItem timer = new TimerItem()
+            {
+                Executer = _fakeExecuter.Object,
+                Source = source,
+                WaitUntil = mockNow.AddMinutes(5),
+            };
+            _fakeExecuter
+                .Setup(t => t.Identifier)
+                .Returns(0);
+            _fakeTimeWrapper
+                .Setup(t => t.UtcNow)
+                .Returns(mockNow);
+            _fakeLogger
+                .Setup(t => t.Log(It.Is<string>(text => text.Contains(" wait until ") && text.Contains("cancelled"))));
+            source.Cancel();
+
+            await manager.WaitAndExecute(timer);
+
+            _mockRepo.VerifyAll();
+        }
+
+        [TestMethod]
+        public async Task WaitAndExecute_ThrowException_CallFailureHandler()
+        {
+            CancellationTokenSource source = new CancellationTokenSource();
+            TimerItem timer = new TimerItem()
+            {
+                Executer = _fakeExecuter.Object,
+                Source = source,
+                WaitUntil = mockNow.AddMinutes(-5),
+            };
+            _fakeExecuter
+                .Setup(t => t.Identifier)
+                .Returns(0);
+            _fakeExecuter
+                .Setup(t => t.ExecuteHandler())
+                .Throws(new Exception("mocked exception"));
+            _fakeExecuter
+                .Setup(t => t.FailureHandler())
+                .Returns(Task.CompletedTask);
+            _fakeTimeWrapper
+                .Setup(t => t.UtcNow)
+                .Returns(mockNow);
+            _fakeLogger
+                .Setup(t => t.LogError(
+                    It.Is<string>(text => text.Contains("error while executing")),
+                    It.IsAny<Exception>()));
+
+            await manager.WaitAndExecute(timer);
+
+            _mockRepo.VerifyAll();
+        }
+
+        [TestMethod]
+        public async Task WaitAndExecute_SuccessExecute_CalculateNextTime()
+        {
+            CancellationTokenSource source = new CancellationTokenSource();
+            TimerItem timer = new TimerItem()
+            {
+                Executer = _fakeExecuter.Object,
+                Source = source,
+                WaitUntil = mockNow.AddMinutes(-5),
+            };
+            manager._timers.Add(0, timer);
+            _fakeExecuter
+                .Setup(t => t.Identifier)
+                .Returns(0);
+            _fakeExecuter
+                .Setup(t => t.ExecuteHandler())
+                .Returns(Task.CompletedTask);
+            _fakeExecuter
+                .Setup(t => t.CalculateNextTime())
+                .Returns(Task.FromResult(TimeSpan.FromSeconds(10)));
+            _fakeTimeWrapper
+                .Setup(t => t.UtcNow)
+                .Returns(mockNow);
+            _fakeLogger
+                .Setup(t => t.Log(It.Is<string>(text => text.Contains(" next execution in "))));
+            _taskFactory
+                .Setup(t => t.StartNew(It.IsAny<Func<object, It.IsAnyType>>(), It.IsAny<object>()))
+                .Returns<Task>(null);
+
+            await manager.WaitAndExecute(timer);
+
+            _mockRepo.VerifyAll();
+        }
     }
 }

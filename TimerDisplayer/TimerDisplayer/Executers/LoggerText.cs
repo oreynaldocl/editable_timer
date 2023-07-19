@@ -25,7 +25,12 @@ namespace TimerDisplayer.Executers
 
         public void Log(string message)
         {
-            CompleteLog += $"\n{DateTime.UtcNow.ToString("mm:ss.fff")} {message}";
+            CompleteLog += $"\n{DateTime.UtcNow:mm:ss.fff} {message}";
+        }
+
+        public void LogError(string message, Exception ex)
+        {
+            CompleteLog += $"\n{DateTime.UtcNow:mm:ss.fff} ERROR {message}. Exception {ex.Message}";
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
