@@ -47,6 +47,7 @@
                     Name="logBlock"
                     TextWrapping="Wrap"
                     TextAlignment="Left"
+                    Width="300"
                     Text="{Binding Path=LogText.CompleteLog, Mode=TwoWay}"
                 />
             </ScrollViewer>

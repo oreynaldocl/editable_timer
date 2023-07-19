@@ -30,7 +30,7 @@ namespace EditableTimer
             dueInitialTime.CheckPositive();
             _timers.Add(executer.Identifier, new TimerItem() { Executer = executer });
 
-            _logger.Log($"{BuildId(executer.Identifier)} RegisterTimer {dueInitialTime}s");
+            _logger.Log($"{BuildId(executer.Identifier)} RegisterTimer {dueInitialTime.TotalSeconds}s");
             StartTimer(executer, DateWrapper.UtcNow.Add(dueInitialTime));
         }
 
@@ -45,7 +45,7 @@ namespace EditableTimer
                 throw new Exception($"Not found executer with identifier: {executer.Identifier}");
             _timers[executer.Identifier].Source.Cancel();
 
-            _logger.Log($"{BuildId(executer.Identifier)} UnregisterTime########################");
+            _logger.Log($"{BuildId(executer.Identifier)} UnregisterTime");
             _timers.Remove(executer.Identifier);
         }
 
@@ -75,13 +75,13 @@ namespace EditableTimer
                 {
                     await executer.ExecuteHandler();
                     TimeSpan timeSpan = await executer.CalculateNextTime();
-                    _logger.Log($"{BuildId(executer.Identifier)} Next executing in {timeSpan}s");
+                    _logger.Log($"{BuildId(executer.Identifier)} Next execution in {timeSpan.TotalSeconds}s");
                     // Method will create new thread
                     StartTimer(executer, DateWrapper.UtcNow.Add(timeSpan));
                 }
                 else
                 {
-                    _logger.Log($"{BuildId(executer.Identifier)} cancelled.");
+                    _logger.Log($"{BuildId(executer.Identifier)} wait until {waitUntil.ToString("mm:ss.fff")} cancelled");
                 }
             }
             catch (Exception ex)
@@ -110,7 +110,7 @@ namespace EditableTimer
 
             _timers[executer.Identifier].Source.Cancel();
             StartTimer(executer, DateWrapper.UtcNow.Add(newTime));
-            _logger.Log($"{BuildId(executer.Identifier)} ChangeWaitTime {newTime}s");
+            _logger.Log($"{BuildId(executer.Identifier)} ChangeWaitTime {newTime.TotalSeconds}s");
         }
 
     }
