@@ -15,8 +15,6 @@ namespace TimerDisplayer.Executers
 
         public int Identifier => identifier;
 
-        public TimeSpan DefaultPeriod => TimeSpan.FromSeconds(60);
-
         public ClockUpdateExecuter(ILogger logger, Dispatcher dispatcher, Label label)
         {
             _logger = logger;
@@ -41,6 +39,11 @@ namespace TimerDisplayer.Executers
         }
 
         public Task FailureHandler()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
         {
             throw new NotImplementedException();
         }

@@ -13,7 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleClient", "ConsoleClient\ConsoleClient.csproj", "{7158739B-84FF-4319-A764-4A572E590CB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditableTimer", "EditableTimer\EditableTimer.csproj", "{E02C5537-6123-4162-9C17-EE3F2C8F8491}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EditableTimer", "EditableTimer\EditableTimer.csproj", "{E02C5537-6123-4162-9C17-EE3F2C8F8491}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditableTimerTests", "EditableTimerTests\EditableTimerTests.csproj", "{0D1D8E99-ACAE-47AE-88EE-90FEF4EE7A67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{E02C5537-6123-4162-9C17-EE3F2C8F8491}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E02C5537-6123-4162-9C17-EE3F2C8F8491}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E02C5537-6123-4162-9C17-EE3F2C8F8491}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D1D8E99-ACAE-47AE-88EE-90FEF4EE7A67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D1D8E99-ACAE-47AE-88EE-90FEF4EE7A67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D1D8E99-ACAE-47AE-88EE-90FEF4EE7A67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D1D8E99-ACAE-47AE-88EE-90FEF4EE7A67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
