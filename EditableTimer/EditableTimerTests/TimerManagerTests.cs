@@ -221,7 +221,6 @@ namespace EditableTimer.Tests
                 WaitUntil = mockNow,
             });
 
-
             manager.ChangeWaitTime(_fakeExecuter.Object, TimeSpan.FromSeconds(10));
 
             Assert.AreEqual(1, manager._timers.Count);
@@ -275,7 +274,7 @@ namespace EditableTimer.Tests
                 .Setup(t => t.ExecuteHandler())
                 .Throws(new Exception("mocked exception"));
             _fakeExecuter
-                .Setup(t => t.FailureHandler())
+                .Setup(t => t.FailureHandler(It.IsAny<Exception>()))
                 .Returns(Task.CompletedTask);
             _fakeTimeWrapper
                 .Setup(t => t.UtcNow)

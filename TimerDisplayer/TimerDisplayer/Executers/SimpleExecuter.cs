@@ -44,7 +44,7 @@ namespace TimerDisplayer.Executers
             await Task.Delay(2000);
         }
 
-        public Task FailureHandler()
+        public Task FailureHandler(Exception ex)
         {
             _manager.UnregisterTimer(this);
             return Task.CompletedTask;

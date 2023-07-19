@@ -97,7 +97,7 @@ namespace EditableTimer
             catch (Exception ex)
             {
                 _logger.LogError($"{BuildId(executer.Identifier)} error while executing", ex);
-                await executer.FailureHandler();
+                await executer.FailureHandler(ex);
             }
         }
 

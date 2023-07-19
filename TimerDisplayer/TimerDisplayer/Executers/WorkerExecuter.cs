@@ -54,7 +54,7 @@ namespace TimerDisplayer.Executers
             return Task.CompletedTask;
         }
 
-        public Task FailureHandler()
+        public Task FailureHandler(Exception ex)
         {
             throw new NotImplementedException();
         }

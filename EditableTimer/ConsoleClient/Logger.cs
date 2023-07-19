@@ -7,14 +7,14 @@ namespace ConsoleClient
     {
         public void Log(string message)
         {
-            string timeStr = DateTime.UtcNow.ToString("HH:mm:ss.ffff");
-            Console.WriteLine($"{timeStr} - {message}");
+            string timeStr = DateTime.UtcNow.ToString("HH:mm:ss.ff");
+            Console.WriteLine($"{timeStr} {message}");
         }
 
         public void LogError(string message, Exception ex)
         {
-            string timeStr = DateTime.UtcNow.ToString("HH:mm:ss.ffff");
-            Console.WriteLine($"{timeStr} ERROR #### - {message} . Exception: {ex.Message}");
+            string timeStr = DateTime.UtcNow.ToString("HH:mm:ss.ff");
+            Console.WriteLine($"{timeStr} ERROR !!!! {message}. Exception: {ex.Message} !!!!");
         }
     }
 }

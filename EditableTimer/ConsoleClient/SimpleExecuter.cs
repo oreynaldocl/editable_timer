@@ -1,6 +1,5 @@
 ﻿using EditableTimer;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ConsoleClient
@@ -13,52 +12,29 @@ namespace ConsoleClient
     public class SimpleExecuter : ITimerExecuter
     {
         private readonly ITimerManager _manager;
+        private readonly ILogger _logger;
         private readonly Random _random;
 
-        private int identifier;
-        public int Identifier => identifier;
+        private int _identifier;
+        public int Identifier => _identifier;
 
-        private int executionCounter = 0;
+        private int executionCounter = -1;
         private int errroFrom = 5;
 
-        private int incrementalAttempt = 0;
+        private int errorAttempt = 0;
         private int[] incrementalTime = new int[] { 100, 200, 4000, 800, 1600, 3200, 6400, 12800, 25600, 51200, 102400 };
 
-        public SimpleExecuter(int identifier, ITimerManager manager)
+        public SimpleExecuter(
+            int identifier,
+            ITimerManager manager,
+            ILogger logger)
         {
-            this.identifier = identifier;
+            _identifier = identifier;
             _manager = manager;
+            _logger = logger;
             _random = new Random();
 
             _manager.RegisterTimer(this, TimeSpan.FromSeconds(2));
-        }
-
-        public Task<TimeSpan> CalculateNextTime()
-        {
-            return Task.FromResult(TimeSpan.FromSeconds(_random.Next(2, 5)));
-        }
-
-        public async Task ExecuteHandler()
-        {
-            if (executionCounter >= errroFrom)
-                throw new Exception("Forcing an error for start a failover process");
-            Console.WriteLine($"{DateTime.UtcNow.ToString("HH:mm:ss.ffff")} [{identifier}-T#{Thread.CurrentThread.ManagedThreadId}] EXECUTING #{executionCounter} Just execute a simple log ###");
-            executionCounter++;
-            await Task.Delay(500);
-        }
-
-        public Task FailureHandler()
-        {
-            TimeSpan timeSpan = BuildIncrementalPeriod(incrementalAttempt);
-            incrementalAttempt++;
-
-            _manager.ChangeWaitTime(this, timeSpan);
-            return Task.CompletedTask;
-        }
-
-        public void Dispose()
-        {
-            _manager.UnregisterTimer(this);
         }
 
         internal TimeSpan BuildIncrementalPeriod(int retryCounter)
@@ -68,6 +44,46 @@ namespace ConsoleClient
                 periodMs = incrementalTime[retryCounter];
 
             return TimeSpan.FromMilliseconds(periodMs);
+        }
+
+        public Task<TimeSpan> CalculateNextTime()
+        {
+            return Task.FromResult(TimeSpan.FromSeconds(_random.Next(2, 5)));
+        }
+
+        public async Task ExecuteHandler()
+        {
+            executionCounter++;
+            _logger.Log($"[{_identifier}] EXECUTE #{executionCounter}. Open a GRPC Connection");
+            await Task.Delay(500);
+            if (executionCounter >= errroFrom)
+            {
+                await Task.Delay(1500);
+                throw new GrpcConnectionException($"[{_identifier}] EXECUTE #{executionCounter} Not possible to connect to GRPC Server");
+            }
+            _logger.Log($"[{_identifier}] EXECUTE #{executionCounter}. Request and process data");
+            await Task.Delay(500);
+        }
+
+        public Task FailureHandler(Exception ex)
+        {
+            if (ex is GrpcConnectionException)
+            {
+                TimeSpan timeSpan = BuildIncrementalPeriod(errorAttempt);
+                errorAttempt++;
+
+                _manager.ChangeWaitTime(this, timeSpan);
+            }
+            else
+            {
+                _manager.UnregisterTimer(this);
+            }
+            return Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+            _manager.UnregisterTimer(this);
         }
     }
 }
