@@ -22,9 +22,10 @@ namespace TimerDisplayer
     /// </summary>
     public partial class MainWindow : Window
     {
-
-        Thickness defaultThickness = new Thickness();
-        List<object> timers;
+        
+        private Thickness defaultThickness = new Thickness();
+        private List<object> timers;
+        private readonly TimerManager _manager;
 
         private LoggerText _logText = new LoggerText();
         public LoggerText LogText => _logText;
@@ -42,10 +43,11 @@ namespace TimerDisplayer
             timers = new List<object>();
 
             TimerManager manager = new TimerManager(_logText);
+            _manager = manager;
             SimpleExecuter executer1 = new SimpleExecuter(0, _logText);
-            manager.RegisterTimer(executer1, TimeSpan.FromSeconds(3));
+            _manager.RegisterTimer(executer1, TimeSpan.FromSeconds(3));
             ClockUpdateExecuter clockUpdater = new ClockUpdateExecuter(_logText, Dispatcher, CurrentTimeLabel);
-            manager.RegisterTimer(clockUpdater, TimeSpan.FromSeconds(1));
+            _manager.RegisterTimer(clockUpdater, TimeSpan.FromSeconds(1));
         }
 
         private void Add_Timer(object sender, RoutedEventArgs e)
@@ -56,6 +58,9 @@ namespace TimerDisplayer
                 interval = 15;
             }
             StackPanel newPanel = makeTimerPanel(timers.Count, interval);
+            Label triggeredLabel = (Label)newPanel.Children[5];
+            WorkerExecuter worker = new WorkerExecuter(_logText, Dispatcher, triggeredLabel, timers.Count+1000, interval);
+            _manager.RegisterTimer(worker, TimeSpan.FromSeconds(interval));
             timers.Add(timers.Count);
             timerPanel.Children.Add(newPanel);
         }
@@ -75,36 +80,45 @@ namespace TimerDisplayer
             idLabel.Content = count.ToString();
             idLabel.Name = "idLabel";
 
+            Button deleteButton = new Button();
+            deleteButton.Width = 25;
+            deleteButton.VerticalAlignment = VerticalAlignment.Center;
+            deleteButton.Margin = defaultThickness;
+            deleteButton.Content = "X";
+            deleteButton.Name = "DeleteButton";
+
             TextBox tBox = new TextBox();
             tBox.Width = 100;
             tBox.Margin = defaultThickness;
             tBox.VerticalAlignment = VerticalAlignment.Center;
             tBox.Name = "TimeResetTextBox";
 
-            Button button = new Button();
-            button.Width = 50;
-            button.VerticalAlignment = VerticalAlignment.Center;
-            button.Margin = defaultThickness;
-            button.Content = "Set";
-            button.Name = "SetButton";
+            Button resetButton = new Button();
+            resetButton.Width = 50;
+            resetButton.VerticalAlignment = VerticalAlignment.Center;
+            resetButton.Margin = defaultThickness;
+            resetButton.Content = "Set";
+            resetButton.Name = "SetButton";
 
             Label intervalLabel = new Label();
             intervalLabel.Width = 100;
             intervalLabel.VerticalAlignment = VerticalAlignment.Center;
             intervalLabel.Margin = defaultThickness;
             intervalLabel.Content = timeInterval.ToString();
-            intervalLabel.Name = "triggerLabel";
+            intervalLabel.Name = "intervalLabel";
 
             Label triggerLabel = new Label();
             triggerLabel.Width = 100;
             triggerLabel.VerticalAlignment = VerticalAlignment.Center;
             triggerLabel.Margin = defaultThickness;
+            triggerLabel.Foreground = Brushes.Red;
             triggerLabel.Content = "";
-            triggerLabel.Name = "triggered";
+            triggerLabel.Name = "triggeredLabel";
 
             panel.Children.Add(idLabel);
+            panel.Children.Add(deleteButton);
             panel.Children.Add(tBox);
-            panel.Children.Add(button);
+            panel.Children.Add(resetButton);
             panel.Children.Add(intervalLabel);
             panel.Children.Add(triggerLabel);
 
