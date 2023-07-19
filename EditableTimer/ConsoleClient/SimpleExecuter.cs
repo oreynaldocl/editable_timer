@@ -22,7 +22,7 @@ namespace ConsoleClient
         private int errroFrom = 5;
 
         private int errorAttempt = 0;
-        private int[] incrementalTime = new int[] { 100, 200, 400, 800, 1600, 3200, 6400, 12800, 25600, 51200, 102400 };
+        private int[] incrementalTime = new int[] { 500, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000 };
 
         public SimpleExecuter(
             int identifier,
