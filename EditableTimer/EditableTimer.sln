@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\Reviewing.cs = ..\Reviewing.cs
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleClient", "ConsoleClient\ConsoleClient.csproj", "{7158739B-84FF-4319-A764-4A572E590CB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoClient", "ConsoleClient\DemoClient.csproj", "{7158739B-84FF-4319-A764-4A572E590CB4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EditableTimer", "EditableTimer\EditableTimer.csproj", "{E02C5537-6123-4162-9C17-EE3F2C8F8491}"
 EndProject
