@@ -19,12 +19,11 @@ namespace EditableTimer
         /// </summary>
         /// <returns></returns>
         Task ExecuteHandler();
-        // TODO Review if we need to call CalculateNextTime after FailureHandler
         /// <summary>
-        /// If there is any failure in process this is executed
+        /// If there is any failure in process the exception is sent to executer
         /// </summary>
         /// <returns></returns>
-        Task FailureHandler();
+        Task FailureHandler(Exception ex);
         // TODO  Review if we need to use TimeSpan / DateTime
         /// <summary>
         /// Returns when will be next execution. Called after ExecuteTask or FailureMethod
