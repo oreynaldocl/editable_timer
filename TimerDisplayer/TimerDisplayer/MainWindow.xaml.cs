@@ -1,18 +1,8 @@
 ﻿using EditableTimer;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using TimerDisplayer.Executers;
 
 namespace TimerDisplayer
@@ -28,7 +18,7 @@ namespace TimerDisplayer
 
         private LoggerText _logText = new LoggerText();
         public LoggerText LogText => _logText;
-
+        TimerManager manager;
 
         public MainWindow()
         {
@@ -41,9 +31,9 @@ namespace TimerDisplayer
 
             timers = new List<object>();
 
-            TimerManager manager = new TimerManager(_logText);
+            manager = new TimerManager(_logText);
             SimpleExecuter executer1 = new SimpleExecuter(0, _logText);
-            manager.RegisterTimer(executer1, TimeSpan.FromSeconds(3));
+            manager.RegisterTimer(executer1, TimeSpan.FromSeconds(20));
             ClockUpdateExecuter clockUpdater = new ClockUpdateExecuter(_logText, Dispatcher, CurrentTimeLabel);
             manager.RegisterTimer(clockUpdater, TimeSpan.FromSeconds(1));
         }
@@ -51,7 +41,7 @@ namespace TimerDisplayer
         private void Add_Timer(object sender, RoutedEventArgs e)
         {
             int interval;
-            if(!Int32.TryParse(TimeIntervalTextBox.Text, out interval))
+            if (!Int32.TryParse(TimeIntervalTextBox.Text, out interval))
             {
                 interval = 15;
             }
