@@ -16,6 +16,7 @@ namespace TimerDisplayer
         
         private Thickness defaultThickness = new Thickness();
         private Dictionary<int, WorkerExecuter> timers;
+        private int currentId = 1000;
         private readonly TimerManager _manager;
 
         private LoggerText _logText = new LoggerText();
@@ -33,8 +34,6 @@ namespace TimerDisplayer
             timers = new Dictionary<int, WorkerExecuter>();
 
             _manager = new TimerManager(_logText);
-            //ClockUpdateExecuter clockUpdater = new ClockUpdateExecuter(_logText, Dispatcher, CurrentTimeLabel);
-            //_manager.RegisterTimer(clockUpdater, TimeSpan.FromSeconds(5));
         }
 
         private void Add_Timer(object sender, RoutedEventArgs e)
@@ -44,12 +43,13 @@ namespace TimerDisplayer
             {
                 interval = 15;
             }
-            StackPanel newPanel = makeTimerPanel(timers.Count, interval);
+            StackPanel newPanel = makeTimerPanel(currentId, interval);
             Label triggeredLabel = (Label)newPanel.Children[5];
-            WorkerExecuter worker = new WorkerExecuter(_logText, Dispatcher, newPanel, timers.Count + 1000, interval);
+            WorkerExecuter worker = new WorkerExecuter(_logText, Dispatcher, newPanel, currentId, interval);
             _manager.RegisterTimer(worker, TimeSpan.FromSeconds(interval));
-            timers.Add(timers.Count, worker);
+            timers.Add(currentId, worker);
             timerPanel.Children.Add(newPanel);
+            currentId++;
         }
 
         private void Delete_Timer(object sender, RoutedEventArgs e)
@@ -104,6 +104,7 @@ namespace TimerDisplayer
             tBox.Margin = defaultThickness;
             tBox.VerticalAlignment = VerticalAlignment.Center;
             tBox.Name = "TimeResetTextBox";
+            tBox.Text = timeInterval.ToString();
 
             Button resetButton = new Button();
             resetButton.Width = 50;

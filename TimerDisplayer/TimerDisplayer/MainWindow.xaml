@@ -12,16 +12,14 @@
             <ColumnDefinition Width="300"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="30" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" DockPanel.Dock="Top" Grid.Column="0" Grid.Row="0">
             <Label Width="100" Margin="3" VerticalAlignment="Center">Add New Timer</Label>
+            <TextBox Width="50" Margin="3" VerticalAlignment="Center" Name="TimeIntervalTextBox">15</TextBox>
             <Button Width="50" Margin="3" VerticalAlignment="Center" Content="New" Click="Add_Timer"/>
-            <TextBox Width="100" Margin="3" VerticalAlignment="Center" Name="TimeIntervalTextBox">Time Interval</TextBox>
-            <Label Width="75" Margin="0" Padding="0" VerticalAlignment="Center">Current Time</Label>
-            <Label Width="25" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Left" Name="CurrentTimeLabel">0</Label>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="0" Grid.Row="1">

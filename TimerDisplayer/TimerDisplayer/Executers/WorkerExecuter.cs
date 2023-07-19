@@ -43,7 +43,7 @@ namespace TimerDisplayer.Executers
                 if (isTriggered == false)
                 {
                     isTriggered = true;
-                    ((Label)panel.Children[5]).Content = "triggered";
+                    ((Label)panel.Children[5]).Content = "triggered".ToUpper();
                 }
                 else
                 {
