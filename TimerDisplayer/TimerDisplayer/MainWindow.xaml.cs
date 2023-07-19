@@ -20,7 +20,6 @@ namespace TimerDisplayer
 
         private LoggerText _logText = new LoggerText();
         public LoggerText LogText => _logText;
-        SimpleExecuter executer1;
 
         public MainWindow()
         {
@@ -34,7 +33,6 @@ namespace TimerDisplayer
             timers = new List<object>();
 
             _manager = new TimerManager(_logText);
-            executer1 = new SimpleExecuter(0, _logText, _manager);
             ClockUpdateExecuter clockUpdater = new ClockUpdateExecuter(_logText, Dispatcher, CurrentTimeLabel);
             _manager.RegisterTimer(clockUpdater, TimeSpan.FromSeconds(5));
         }
